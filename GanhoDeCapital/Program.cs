@@ -16,7 +16,7 @@ namespace GanhoDeCapital
             ITransacaoService transacaoService = new TransacaoService();
 
             Console.WriteLine("***********Saída*************");
-            Console.WriteLine(transacaoService.Calcula(entrada));
+            Console.WriteLine(transacaoService.RetornaTaxas(entrada));
         }
     }
 }

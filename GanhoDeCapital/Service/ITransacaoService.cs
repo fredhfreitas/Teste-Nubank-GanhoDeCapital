@@ -2,6 +2,6 @@
 {
     public interface ITransacaoService
     {
-        string Calcula(string entrada);
+        string RetornaTaxas(string entrada);
     }
 }

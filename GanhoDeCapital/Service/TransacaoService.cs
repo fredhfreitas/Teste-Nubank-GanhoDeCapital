@@ -7,7 +7,7 @@ namespace GanhoDeCapital.Service
 {
     public class TransacaoService : ITransacaoService
     {
-        public string Calcula(string entrada)
+        public string RetornaTaxas(string entrada)
         {
             string taxa = string.Empty;
             //Retorna a lista de ações em string

@@ -13,9 +13,14 @@ namespace GanhoDeCapital.Business
         decimal _lucro;
         decimal _valorDeCompra;
         bool _recalculaMedia;
-        IList<Acao> _acoesProcessadas;
         bool _recalculaLucro;
+        IList<Acao> _acoesProcessadas;
 
+        /// <summary>
+        /// Devolte todas as taxas das operações que foram processadas
+        /// </summary>
+        /// <param name="listaDeAcoes"></param>
+        /// <returns></returns>
         public IList<Taxa> Calcula(IList<Acao> listaDeAcoes)
         {
             IList<Taxa> taxas = new List<Taxa>();
@@ -58,17 +63,15 @@ namespace GanhoDeCapital.Business
 
         private decimal Venda(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
         {
-            MediaIgualLucro(custoUnitario, media);
-
             decimal prejuizo = CalculaPrejuizo(quantidade, custoUnitario, media, valorDeCompra);
-            decimal lucro = CalculaLucro(quantidade, custoUnitario, media, _recalculaLucro, valorDeCompra);
+            decimal lucro = CalculaLucro(quantidade, custoUnitario, media, valorDeCompra);
 
             decimal retorno = ResultouEmPrejuizo(prejuizo, lucro);
 
             DeduzLucroPrejuizo(lucro, prejuizo);
 
             //Se ação de compra custo x quantidade for menor que 20000
-            //não paga imposto
+            //não paga imposto caso contrário tenho que calcular o percentual sobre o lucro
             if (!MenorQue20000(quantidade, custoUnitario))
                 retorno = PercentualSobreLucro(_lucro);
 
@@ -104,16 +107,6 @@ namespace GanhoDeCapital.Business
 
             return Math.Abs(qtdAcaoCompra - qtdVenda);
         }
-
-        private void MediaIgualLucro(decimal custoUnitario, decimal media)
-        {
-            //resolve o caso 5 verificar
-            if (custoUnitario == media)
-            {
-                _recalculaLucro = true;
-            }
-        }
-
         private decimal ResultouEmPrejuizo(decimal prejuizo, decimal lucro)
         {
             decimal retorno = 0;
@@ -161,13 +154,20 @@ namespace GanhoDeCapital.Business
 
             return retorno;
         }
-
-        private decimal CalculaLucro(decimal quantidade, decimal custoUnitario, decimal media, bool recalculaLucro, decimal valorDeCompra)
+        
+        private decimal CalculaLucro(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
         {
+
+            //resolve o caso 5 verificar
+            if (custoUnitario == media)
+            {
+                _recalculaLucro = true;
+            }
+
             if ((custoUnitario > media))
             {
                 //Se não teve lucro e nem prejuizo anterior eu devo calcular o lucro de maneira diferente
-                if (recalculaLucro)
+                if (_recalculaLucro)
                     _lucro = valorDeCompra * quantidade;
                 else
                     _lucro = Math.Abs(valorDeCompra - custoUnitario) * quantidade;
