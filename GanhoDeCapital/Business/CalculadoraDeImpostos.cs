@@ -35,7 +35,8 @@ namespace GanhoDeCapital.Business
                 {
                     case "buy":
                         novaCompra = true;
-                        valorDeCompra = Compra(acao.Quantidade, acao.CustoUnitario, media);
+                        //Atualiza o valor de compra
+                        valorDeCompra = Compra(acao.CustoUnitario, media);
                         break;
                     case "sell":
                         
@@ -54,16 +55,33 @@ namespace GanhoDeCapital.Business
 
             return taxas;
         }
-
-        public decimal QuantidadeDeAcoesAtual(IList<Acao> acoesProcessadas)
+        
+        public decimal Venda(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
         {
-            decimal qtdAcaoCompra = acoesProcessadas.Where(item => item.Operacao.Equals("buy")).Sum(item => item.Quantidade);
-            decimal qtdVenda = acoesProcessadas.Where(item => item.Operacao.Equals("sell")).Sum(item => item.Quantidade);
+            MediaIgualLucro(custoUnitario, media);
 
-            return Math.Abs(qtdAcaoCompra - qtdVenda);
+            decimal prejuizo = CalculaPrejuizo(quantidade, custoUnitario, media, valorDeCompra);
+            decimal lucro = CalculaLucro(quantidade, custoUnitario, media, _recalculaLucro, valorDeCompra);
+
+            decimal retorno = ResultouEmPrejuizo(prejuizo, lucro);
+
+            DeduzLucroPrejuizo(lucro, prejuizo);
+
+            //Se ação de compra custo x quantidade for menor que 20000
+            //não paga imposto
+            if (!MenorQue20000(quantidade, custoUnitario))
+                retorno = PercentualSobreLucro(_lucro);
+
+            return retorno;
         }
 
-        public decimal Compra(decimal quantidade, decimal custoUnitario, decimal media)
+        /// <summary>
+        /// Realiza os tratamentos para realizar a compra
+        /// </summary>
+        /// <param name="custoUnitario"></param>
+        /// <param name="media"></param>
+        /// <returns>Retorna o valor de Compra</returns>
+        public decimal Compra(decimal custoUnitario, decimal media)
         {
             //Se a média já foi calculada e é uma nova compra tenho que atualizar o valor de compra para o atual e recalcular a média na venda
             if (media > 0)
@@ -74,47 +92,39 @@ namespace GanhoDeCapital.Business
 
             //Se é a primeira compra
             if (_valorDeCompra == 0)
-                _valorDeCompra += custoUnitario;
+                _valorDeCompra = custoUnitario;
 
             return _valorDeCompra;
         }
-        public decimal Venda(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
+
+        public decimal QuantidadeDeAcoesAtual(IList<Acao> acoesProcessadas)
         {
-            decimal retorno = 0;
+            decimal qtdAcaoCompra = acoesProcessadas.Where(item => item.Operacao.Equals("buy")).Sum(item => item.Quantidade);
+            decimal qtdVenda = acoesProcessadas.Where(item => item.Operacao.Equals("sell")).Sum(item => item.Quantidade);
+
+            return Math.Abs(qtdAcaoCompra - qtdVenda);
+        }
+
+        public void MediaIgualLucro(decimal custoUnitario, decimal media)
+        {
             //resolve o caso 5 verificar
             if (custoUnitario == media)
             {
                 _recalculaLucro = true;
             }
+        }
 
-            decimal prejuizo = CalculaPrejuizo(quantidade, custoUnitario, media);
-            decimal lucro = CalculaLucro(quantidade, custoUnitario, media, _recalculaLucro, valorDeCompra);
-
+        public decimal ResultouEmPrejuizo(decimal prejuizo, decimal lucro)
+        {
+            decimal retorno = 0;
             //Se a transação resultou em prejuízo na compra
             if (prejuizo > 0 && lucro == 0)
             {
-                return retorno;
+                retorno = 0;
             }
-
-            DeduzLucroPrejuizo(lucro, prejuizo);
-
-            //Verifica se contém prejuizo
-            if (_prejuizo > 0 || (_prejuizo > _lucro))
-                return retorno;
-
-            //Se ação de compra custo x quantidade for menor que 20000
-            //não paga imposto
-            var valorImpostoIsento = MenorQue20000(quantidade, custoUnitario);
-
-            if (valorImpostoIsento)
-            {
-                return retorno;
-            }
-
-            retorno = PercentualSobreLucro(_lucro);
 
             return retorno;
-        }
+        }        
 
         public void DeduzLucroPrejuizo(decimal lucro, decimal prejuizo)
         {
@@ -191,20 +201,19 @@ namespace GanhoDeCapital.Business
             return _mediaPonderadaAtual;
         }
 
-        public decimal CalculaPrejuizo(decimal quantidade, decimal custoUnitario, decimal media)
+        public decimal CalculaPrejuizo(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
         {
             //Prejuizo
             if (custoUnitario < media)
             {
                 if (_prejuizo > 0)
                 {
-                    var resultado = Math.Abs(((_valorDeCompra - custoUnitario)) * quantidade);
+                    var resultado = Math.Abs(((valorDeCompra - custoUnitario)) * quantidade);
 
                     _prejuizo = _prejuizo - resultado;
                 }
                 else
-                    _prejuizo = Math.Abs(_valorDeCompra - custoUnitario) * quantidade;
-
+                    _prejuizo = Math.Abs(valorDeCompra - custoUnitario) * quantidade;
             }
 
             return _prejuizo;
