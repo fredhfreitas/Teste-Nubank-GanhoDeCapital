@@ -73,10 +73,22 @@ Na raíz da pasta do projeto execute os comandos.
     {"operation":"sell", "unit-cost":50.00, "quantity": 10000}]
 ```
 
-##### Espere a saída:
+  ##### Espere a saída:
 
 ```json
     [{"tax":0.00},{"tax":80000.00},{"tax":0.00},{"tax":60000.00}]
 ```
+
+
+##### Para rodar local é necessário baixar o sdk do .net 3.1 no link informado em "Ferramentas utilizadas"
+
+Na raíz da aplicação dentro da pasta \GanhoDeCapital rode o comando:
+
+```bash
+  dotnet run
+``` 
+
+Informe a linha de entrada e espere a saída.
+
 
 
