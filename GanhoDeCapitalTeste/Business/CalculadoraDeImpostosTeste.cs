@@ -5,6 +5,7 @@ using GanhoDeCapital.Entity;
 using System.Collections.Generic;
 using System.Text.Json;
 
+
 namespace GanhoDeCapitalTeste.Business
 {
     public class CalculadoraDeImpostosTeste
@@ -31,7 +32,7 @@ namespace GanhoDeCapitalTeste.Business
             var acoes = JsonSerializer.Deserialize<List<Acao>>(entrada);
 
             CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
-
+            
             var retorno = calculadora.MediaPonderada(50, 10, false, acoes);
 
             Assert.Equal(20, retorno);
