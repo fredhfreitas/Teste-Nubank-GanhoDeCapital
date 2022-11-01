@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GanhoDeCapitalTeste": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
