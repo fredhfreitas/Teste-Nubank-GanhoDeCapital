@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GanhoDeCapital.Business
 {
-    public class CalculadoraDeImpostos : ICalculadoraDeImpostos
+    public class CalculadoraDeImpostos
     {
         decimal _mediaPonderadaAtual;
         decimal _prejuizo;
@@ -24,24 +24,26 @@ namespace GanhoDeCapital.Business
 
             //identifica uma nova compra
             bool novaCompra = false;
-
+            decimal media = 0;
+            decimal valorDeCompra = 0;
             foreach (var acao in listaDeAcoes)
             {
                 decimal imposto = 0;
                 _acoesProcessadas.Add(acao);
-
+                
                 switch (acao.Operacao)
                 {
                     case "buy":
                         novaCompra = true;
-                        Compra(acao.Quantidade, acao.CustoUnitario);
+                        valorDeCompra = Compra(acao.Quantidade, acao.CustoUnitario, media);
                         break;
                     case "sell":
+                        
                         //Caso tenha ocorrido uma nova compra eu devo recalcular a média
                         if (novaCompra)
-                            MediaPonderada(acao.Quantidade);
+                          media =  MediaPonderada(acao.Quantidade, _mediaPonderadaAtual, _recalculaMedia, _acoesProcessadas);
 
-                        imposto = Venda(acao.Quantidade, acao.CustoUnitario);
+                        imposto = Venda(acao.Quantidade, acao.CustoUnitario, media, valorDeCompra);
                         novaCompra = false;
                         break;
                 }
@@ -53,18 +55,18 @@ namespace GanhoDeCapital.Business
             return taxas;
         }
 
-        public decimal QuantidadeDeAcoesAtual()
+        public decimal QuantidadeDeAcoesAtual(IList<Acao> acoesProcessadas)
         {
-            decimal qtdAcaoCompra = _acoesProcessadas.Where(item => item.Operacao.Equals("buy")).Sum(item => item.Quantidade);
-            decimal qtdVenda = _acoesProcessadas.Where(item => item.Operacao.Equals("sell")).Sum(item => item.Quantidade);
+            decimal qtdAcaoCompra = acoesProcessadas.Where(item => item.Operacao.Equals("buy")).Sum(item => item.Quantidade);
+            decimal qtdVenda = acoesProcessadas.Where(item => item.Operacao.Equals("sell")).Sum(item => item.Quantidade);
 
             return Math.Abs(qtdAcaoCompra - qtdVenda);
         }
 
-        public void Compra(decimal quantidade, decimal custoUnitario)
+        public decimal Compra(decimal quantidade, decimal custoUnitario, decimal media)
         {
             //Se a média já foi calculada e é uma nova compra tenho que atualizar o valor de compra para o atual e recalcular a média na venda
-            if (_mediaPonderadaAtual > 0)
+            if (media > 0)
             {
                 _valorDeCompra = custoUnitario;
                 _recalculaMedia = true;
@@ -73,18 +75,20 @@ namespace GanhoDeCapital.Business
             //Se é a primeira compra
             if (_valorDeCompra == 0)
                 _valorDeCompra += custoUnitario;
+
+            return _valorDeCompra;
         }
-        public decimal Venda(decimal quantidade, decimal custoUnitario)
+        public decimal Venda(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
         {
             decimal retorno = 0;
             //resolve o caso 5 verificar
-            if (custoUnitario == _mediaPonderadaAtual)
+            if (custoUnitario == media)
             {
                 _recalculaLucro = true;
             }
 
-            decimal prejuizo = Prejuizo(quantidade, custoUnitario);
-            decimal lucro = Lucro(quantidade, custoUnitario);
+            decimal prejuizo = CalculaPrejuizo(quantidade, custoUnitario, media);
+            decimal lucro = CalculaLucro(quantidade, custoUnitario, media, _recalculaLucro, valorDeCompra);
 
             //Se a transação resultou em prejuízo na compra
             if (prejuizo > 0 && lucro == 0)
@@ -92,8 +96,9 @@ namespace GanhoDeCapital.Business
                 return retorno;
             }
 
-            DeduzLucroDoPrejuizo(lucro, prejuizo);
+            DeduzLucroPrejuizo(lucro, prejuizo);
 
+            //Verifica se contém prejuizo
             if (_prejuizo > 0 || (_prejuizo > _lucro))
                 return retorno;
 
@@ -106,13 +111,13 @@ namespace GanhoDeCapital.Business
                 return retorno;
             }
 
-            retorno = PercentualSobreLucro();
+            retorno = PercentualSobreLucro(_lucro);
 
             return retorno;
         }
-        public void DeduzLucroDoPrejuizo(decimal lucro, decimal prejuizo)
-        {
 
+        public void DeduzLucroPrejuizo(decimal lucro, decimal prejuizo)
+        {
             /*deduzir prejuizo do lucro e possivelmente zerar criar uma regra*/
             if (lucro > prejuizo)
             {
@@ -125,11 +130,11 @@ namespace GanhoDeCapital.Business
                 _lucro = 0;
             }
         }
-        public decimal PercentualSobreLucro()
+        public decimal PercentualSobreLucro(decimal lucro)
         {
             decimal imposto;
 
-            imposto = (_lucro * 20) / 100;
+            imposto = (lucro * 20) / 100;
 
             return imposto;
         }
@@ -147,17 +152,15 @@ namespace GanhoDeCapital.Business
             return retorno;
         }
 
-        public decimal Lucro(decimal quantidade, decimal custoUnitario)
+        public decimal CalculaLucro(decimal quantidade, decimal custoUnitario, decimal media, bool recalculaLucro, decimal valorDeCompra)
         {
-            if ((custoUnitario > _mediaPonderadaAtual))
+            if ((custoUnitario > media))
             {
-                //var quantidadeAtual = QuantidadeDeAcoesAtual();
-
                 //Se não teve lucro e nem prejuizo anterior eu devo calcular o lucro de maneira diferente
-                if (_recalculaLucro)
-                    _lucro = _valorDeCompra * quantidade;
+                if (recalculaLucro)
+                    _lucro = valorDeCompra * quantidade;
                 else
-                    _lucro = System.Math.Abs(_valorDeCompra - custoUnitario) * quantidade;
+                    _lucro = Math.Abs(valorDeCompra - custoUnitario) * quantidade;
 
             }
             else _lucro = 0;//Para não pegar valores anteriores
@@ -165,16 +168,16 @@ namespace GanhoDeCapital.Business
             return _lucro;
         }
 
-        public decimal MediaPonderada(decimal quantidadeCompra)
+        public decimal MediaPonderada(decimal quantidadeCompra, decimal mediaPonderadaAtual, bool recalculaMedia, IList<Acao> acoesProcessadas)
         {
             decimal novaMedia = 0;
-            var acoesCompra = _acoesProcessadas.Where(item => item.Operacao.Equals("buy"));
+            var acoesCompra = acoesProcessadas.Where(item => item.Operacao.Equals("buy"));
             decimal qtdAcaoCompra = acoesCompra.Sum(item => item.Quantidade * item.CustoUnitario);
-            decimal quantidadeAtual = QuantidadeDeAcoesAtual();
+            decimal quantidadeAtual = QuantidadeDeAcoesAtual(acoesProcessadas);
 
-            if (!_recalculaMedia)
+            if (!recalculaMedia)
             {
-                novaMedia = ((quantidadeAtual * _mediaPonderadaAtual) + (qtdAcaoCompra)) / (quantidadeAtual + quantidadeCompra);
+                novaMedia = ((quantidadeAtual * mediaPonderadaAtual) + (qtdAcaoCompra)) / (quantidadeAtual + quantidadeCompra);
             }
             else
             {  //Se houve uma compra e todas as ações foram vendidas. O valor de compra vira a nova média
@@ -188,10 +191,10 @@ namespace GanhoDeCapital.Business
             return _mediaPonderadaAtual;
         }
 
-        public decimal Prejuizo(decimal quantidade, decimal custoUnitario)
+        public decimal CalculaPrejuizo(decimal quantidade, decimal custoUnitario, decimal media)
         {
             //Prejuizo
-            if (custoUnitario < _mediaPonderadaAtual)
+            if (custoUnitario < media)
             {
                 if (_prejuizo > 0)
                 {

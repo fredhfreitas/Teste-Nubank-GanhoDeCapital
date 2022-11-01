@@ -17,8 +17,8 @@ namespace GanhoDeCapitalTeste.Business
             var acoes = JsonSerializer.Deserialize<List<Acao>>(entrada);
 
             CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
-            calculadora.Calcula(acoes);
-            var retorno = calculadora.QuantidadeDeAcoesAtual();
+            
+            var retorno = calculadora.QuantidadeDeAcoesAtual(acoes);
 
             Assert.Equal(0, retorno);
         }
@@ -31,11 +31,10 @@ namespace GanhoDeCapitalTeste.Business
             var acoes = JsonSerializer.Deserialize<List<Acao>>(entrada);
 
             CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
-            calculadora.Calcula(acoes);
 
-            var retorno = calculadora.MediaPonderada(100);
+            var retorno = calculadora.MediaPonderada(50, 10, false, acoes);
 
-            Assert.Equal(10, retorno);
+            Assert.Equal(20, retorno);
         }        
     }
 }
