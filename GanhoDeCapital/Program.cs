@@ -5,7 +5,7 @@ using System;
 namespace GanhoDeCapital
 {
     internal class Program
-    {
+    {   
         static void Main(string[] args)
         {
             Console.WriteLine("***********Entrada*************");
@@ -13,7 +13,7 @@ namespace GanhoDeCapital
 
             var entrada = Console.ReadLine();
 
-            TransacaoService transacaoService = new TransacaoService();
+            ITransacaoService transacaoService = new TransacaoService();
 
             Console.WriteLine("***********Saída*************");
             Console.WriteLine(transacaoService.Calcula(entrada));

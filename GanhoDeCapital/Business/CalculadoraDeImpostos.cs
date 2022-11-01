@@ -1,4 +1,4 @@
-﻿using GanhoDeCapital.Entity;
+﻿using GanhoDeCapital.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

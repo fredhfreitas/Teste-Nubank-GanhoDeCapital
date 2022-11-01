@@ -1,4 +1,4 @@
-﻿using GanhoDeCapital.Entity;
+﻿using GanhoDeCapital.Model;
 using System.Collections.Generic;
 
 namespace GanhoDeCapital.Business

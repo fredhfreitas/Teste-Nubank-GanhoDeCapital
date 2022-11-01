@@ -1,6 +1,6 @@
 ﻿using Xunit;
 using GanhoDeCapital.Business;
-using GanhoDeCapital.Entity;
+using GanhoDeCapital.Model;
 using System.Collections.Generic;
 using System.Text.Json;
 using GanhoDeCapital;
