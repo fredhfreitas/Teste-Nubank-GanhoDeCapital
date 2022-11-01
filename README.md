@@ -24,7 +24,7 @@ Ex: User Interface -> Domain -> Data Acess Library
   │   └── ICalculadoraDeImpostos.cs
   ├── Service
   │   └── ITransacaoService.cs
-  │   └── TransacaoService.cs (Camada responsável por tratar a informação para a CalculadoraDeImpostos)  
+  │   └── TransacaoService.cs (Camada responsável por tratar a informação para a CalculadoraDeImpostos e retornar as taxas)  
   ├── Model (Classes para o tratamento de entrada e saída)
   │   └── Acao.cs
   │   └── Taxa.cs 
