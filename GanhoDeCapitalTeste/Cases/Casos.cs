@@ -10,13 +10,15 @@ namespace GanhoDeCapitalTeste.Casos
 {
     public class Casos
     {
+        ICalculadoraDeImpostos calculadoraDeImpostos;
+
         [Theory]
         [InlineData("[{\"operation\":\"buy\", \"unit-cost\":10.00, \"quantity\": 100},{\"operation\":\"sell\", \"unit-cost\":15.00, \"quantity\": 50},{\"operation\":\"sell\", \"unit-cost\":15.00, \"quantity\": 50}]")]
         public void Caso1(string entrada)
         {
-            CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
+            calculadoraDeImpostos = new CalculadoraDeImpostos();
             var acoes = JsonSerializer.Deserialize<IList<Acao>>(entrada);
-            var retorno = calculadora.Calcula(acoes);
+            var retorno = calculadoraDeImpostos.Calcula(acoes);
 
             var taxaComparacao = new List<Taxa>();
             taxaComparacao.Add(new Taxa() { Tax = "0,00" });
@@ -40,7 +42,7 @@ namespace GanhoDeCapitalTeste.Casos
             {
                 var acoes = JsonSerializer.Deserialize<List<Acao>>(valor);
 
-                CalculadoraDeImpostos calculadoraDeImpostos = new CalculadoraDeImpostos();
+                calculadoraDeImpostos = new CalculadoraDeImpostos();
 
                 taxa += JsonSerializer.Serialize(calculadoraDeImpostos.Calcula(acoes));
             }
@@ -65,9 +67,9 @@ namespace GanhoDeCapitalTeste.Casos
         [InlineData("[{\"operation\":\"buy\", \"unit-cost\":10.00, \"quantity\": 10000},{\"operation\":\"sell\", \"unit-cost\":20.00, \"quantity\": 5000},{\"operation\":\"sell\", \"unit-cost\":5.00, \"quantity\": 5000}]")]
         public void Caso2(string entrada)
         {
-            CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
+            calculadoraDeImpostos = new CalculadoraDeImpostos();
             var acoes = JsonSerializer.Deserialize<IList<Acao>>(entrada);
-            var retorno = calculadora.Calcula(acoes);
+            var retorno = calculadoraDeImpostos.Calcula(acoes);
 
             var taxaComparacao = new List<Taxa>();
             taxaComparacao.Add(new Taxa() { Tax = "0,00" });
@@ -84,9 +86,9 @@ namespace GanhoDeCapitalTeste.Casos
         [InlineData("[{\"operation\":\"buy\", \"unit-cost\":10.00, \"quantity\": 10000},{\"operation\":\"sell\", \"unit-cost\":5.00, \"quantity\": 5000},{\"operation\":\"sell\", \"unit-cost\":20.00, \"quantity\": 3000}]")]
         public void Caso3(string entrada)
         {
-            CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
+            calculadoraDeImpostos = new CalculadoraDeImpostos();
             var acoes = JsonSerializer.Deserialize<IList<Acao>>(entrada);
-            var retorno = calculadora.Calcula(acoes);
+            var retorno = calculadoraDeImpostos.Calcula(acoes);
 
             var taxaComparacao = new List<Taxa>();
             taxaComparacao.Add(new Taxa() { Tax = "0,00" });
@@ -103,9 +105,9 @@ namespace GanhoDeCapitalTeste.Casos
         [InlineData("[{\"operation\":\"buy\", \"unit-cost\":10.00, \"quantity\": 10000},{\"operation\":\"buy\", \"unit-cost\":25.00, \"quantity\": 5000},{\"operation\":\"sell\", \"unit-cost\":15.00, \"quantity\": 10000}]")]
         public void Caso4(string entrada)
         {
-            CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
+            calculadoraDeImpostos = new CalculadoraDeImpostos();
             var acoes = JsonSerializer.Deserialize<IList<Acao>>(entrada);
-            var retorno = calculadora.Calcula(acoes);
+            var retorno = calculadoraDeImpostos.Calcula(acoes);
 
             var taxaComparacao = new List<Taxa>();
             taxaComparacao.Add(new Taxa() { Tax = "0,00" });
@@ -122,9 +124,9 @@ namespace GanhoDeCapitalTeste.Casos
         [InlineData("[{\"operation\":\"buy\", \"unit-cost\":10.00, \"quantity\": 10000},{\"operation\":\"buy\", \"unit-cost\":25.00, \"quantity\": 5000},{\"operation\":\"sell\", \"unit-cost\":15.00, \"quantity\": 10000},{\"operation\":\"sell\", \"unit-cost\":25.00, \"quantity\": 5000}]")]
         public void Caso5(string entrada)
         {
-            CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
+            calculadoraDeImpostos = new CalculadoraDeImpostos();
             var acoes = JsonSerializer.Deserialize<IList<Acao>>(entrada);
-            var retorno = calculadora.Calcula(acoes);
+            var retorno = calculadoraDeImpostos.Calcula(acoes);
 
             var taxaComparacao = new List<Taxa>();
             taxaComparacao.Add(new Taxa() { Tax = "0,00" });
@@ -142,9 +144,9 @@ namespace GanhoDeCapitalTeste.Casos
         [InlineData("[{\"operation\":\"buy\", \"unit-cost\":10.00, \"quantity\": 10000},{\"operation\":\"sell\", \"unit-cost\":2.00, \"quantity\": 5000},{\"operation\":\"sell\", \"unit-cost\":20.00, \"quantity\": 2000},{\"operation\":\"sell\", \"unit-cost\":20.00, \"quantity\": 2000},{\"operation\":\"sell\", \"unit-cost\":25.00, \"quantity\": 1000}]")]
         public void Caso6(string entrada)
         {
-            CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
+            calculadoraDeImpostos = new CalculadoraDeImpostos();
             var acoes = JsonSerializer.Deserialize<IList<Acao>>(entrada);
-            var retorno = calculadora.Calcula(acoes);
+            var retorno = calculadoraDeImpostos.Calcula(acoes);
 
             var taxaComparacao = new List<Taxa>();
             taxaComparacao.Add(new Taxa() { Tax = "0,00" });
@@ -163,11 +165,9 @@ namespace GanhoDeCapitalTeste.Casos
         [InlineData("[{\"operation\":\"buy\", \"unit-cost\":10.00, \"quantity\": 10000},{\"operation\":\"sell\", \"unit-cost\":2.00, \"quantity\": 5000},{\"operation\":\"sell\", \"unit-cost\":20.00, \"quantity\": 2000},{\"operation\":\"sell\", \"unit-cost\":20.00, \"quantity\": 2000},{\"operation\":\"sell\", \"unit-cost\":25.00, \"quantity\": 1000},{\"operation\":\"buy\", \"unit-cost\":20.00, \"quantity\": 10000},{\"operation\":\"sell\", \"unit-cost\":15.00, \"quantity\": 5000},{\"operation\":\"sell\", \"unit-cost\":30.00, \"quantity\": 4350},{\"operation\":\"sell\", \"unit-cost\":30.00, \"quantity\": 650}]")]
         public void Caso7(string entrada)
         {
-            
-
-            CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
+            calculadoraDeImpostos = new CalculadoraDeImpostos();
             var acoes = JsonSerializer.Deserialize<IList<Acao>>(entrada);
-            var retorno = calculadora.Calcula(acoes);
+            var retorno = calculadoraDeImpostos.Calcula(acoes);
 
             var taxaComparacao = new List<Taxa>();
             taxaComparacao.Add(new Taxa() { Tax = "0,00" });
@@ -190,9 +190,9 @@ namespace GanhoDeCapitalTeste.Casos
         [InlineData("[{\"operation\":\"buy\", \"unit-cost\":10.00, \"quantity\": 10000},{\"operation\":\"sell\", \"unit-cost\":50.00, \"quantity\": 10000},{\"operation\":\"buy\", \"unit-cost\":20.00, \"quantity\": 10000},{\"operation\":\"sell\", \"unit-cost\":50.00, \"quantity\": 10000}]")]
         public void Caso8(string entrada)
         {
-            CalculadoraDeImpostos calculadora = new CalculadoraDeImpostos();
+            calculadoraDeImpostos = new CalculadoraDeImpostos();
             var acoes = JsonSerializer.Deserialize<IList<Acao>>(entrada);
-            var retorno = calculadora.Calcula(acoes);
+            var retorno = calculadoraDeImpostos.Calcula(acoes);
 
             var taxaComparacao = new List<Taxa>();
             taxaComparacao.Add(new Taxa() { Tax = "0,00" });

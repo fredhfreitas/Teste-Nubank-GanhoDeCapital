@@ -10,6 +10,7 @@ namespace GanhoDeCapital.Service
         public string Calcula(string entrada)
         {
             string taxa = string.Empty;
+            //Retorna a lista de ações em string
             var lista = Util.RetornaListaTransacao(entrada);
 
             foreach (var valor in lista)
