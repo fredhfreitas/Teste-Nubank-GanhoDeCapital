@@ -7,17 +7,12 @@ FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
 COPY ["GanhoDeCapital/GanhoDeCapital.csproj", "GanhoDeCapital/"]
 RUN dotnet restore "GanhoDeCapital/GanhoDeCapital.csproj"
-COPY ["GanhoDeCapitalTeste/GanhoDeCapitalTeste.csproj", "GanhoDeCapital/"]
-RUN dotnet restore "GanhoDeCapitalTeste/GanhoDeCapitalTeste.csproj"
 COPY . .
 WORKDIR "/src/GanhoDeCapital"
 RUN dotnet build "GanhoDeCapital.csproj" -c Release -o /app/build
 
-WORKDIR "/src/GanhoDeCapitalTeste"
-RUN dotnet build "GanhoDeCapitalTeste.csproj" -c Release -o /app/build
-
 FROM build AS publish
-RUN dotnet publish "GanhoDeCapital.csproj" -c Release -o /app/publish 
+RUN dotnet publish "GanhoDeCapital.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
