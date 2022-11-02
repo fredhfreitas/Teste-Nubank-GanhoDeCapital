@@ -60,7 +60,7 @@ namespace GanhoDeCapital.Business
             return taxas;
         }
 
-        private decimal Venda(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
+        public decimal Venda(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
         {
             decimal prejuizo = CalculaPrejuizo(quantidade, custoUnitario, media, valorDeCompra);
             decimal lucro = CalculaLucro(quantidade, custoUnitario, media, valorDeCompra);
@@ -117,7 +117,6 @@ namespace GanhoDeCapital.Business
 
             return retorno;
         }
-
         private void DeduzLucroPrejuizo(decimal lucro, decimal prejuizo)
         {
             /*deduzir prejuizo do lucro e possivelmente zerar criar uma regra*/
@@ -132,7 +131,7 @@ namespace GanhoDeCapital.Business
                 _lucro = 0;
             }
         }
-        private decimal PercentualSobreLucro(decimal lucro)
+        public decimal PercentualSobreLucro(decimal lucro)
         {
             decimal imposto;
 
@@ -153,7 +152,7 @@ namespace GanhoDeCapital.Business
 
             return retorno;
         }
-        
+
         private decimal CalculaLucro(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
         {
 
