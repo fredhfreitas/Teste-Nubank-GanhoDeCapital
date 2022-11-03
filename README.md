@@ -45,13 +45,6 @@ Ex: User Interface -> Domain -> Data Acess Library
 Program -> TransacaoService -> CalculadoraDeImpostos
 ```
 
-```shell
-A classe CalculadoraDeImpostos possui alguns métodos com transparência referencial.
-
-Ex: CalculaPrejuizo, CalculaLucro, MediaPonderada
-```
-
-
 ## Ferramentas utilizadas
 
 - Visual Studio 2022 (necessário somente para compilação local)
@@ -61,6 +54,8 @@ Ex: CalculaPrejuizo, CalculaLucro, MediaPonderada
 ## Instalação
 
 Rodando a app em um conteiner docker. 
+
+Após os arquivos estarem descompactados em uma pasta de sua preferência.
 
 Na raíz da pasta do projeto execute os comandos.
 
