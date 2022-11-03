@@ -71,7 +71,7 @@ namespace GanhoDeCapital.Business
 
             //Se ação de compra custo x quantidade for menor que 20000
             //não paga imposto caso contrário tenho que calcular o percentual sobre o lucro
-            if (!MenorQue20000(quantidade, custoUnitario))
+            if (!LucroMenorQue20000(quantidade, custoUnitario))
                 retorno = PercentualSobreLucro(_lucro);
 
             return retorno;
@@ -139,7 +139,7 @@ namespace GanhoDeCapital.Business
 
             return imposto;
         }
-        public bool MenorQue20000(decimal quantidade, decimal custoUnitario)
+        public bool LucroMenorQue20000(decimal quantidade, decimal custoUnitario)
         {
             bool retorno = false;
 

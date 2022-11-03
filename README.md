@@ -9,9 +9,9 @@ Este projeto tem como objetivo apresentar um programa de linha de comando (CLI) 
 
 ## Arquitetura  
 
-Robert “Uncle Bob” Martin recomenda fortemente à organização do projeto, visando o fácil entendimento e que seja ágil a mudanças. 
+Utilizei o princípio do “Uncle Bob” Martin que recomenda fortemente à organização do projeto visando o fácil entendimento e que seja ágil a mudanças. 
 
-Baseado na arquitetura Clean Code: 
+Baseado na arquitetura limpa: 
 ```shell  
 Ex: User Interface -> Domain -> Data Acess Library
 ```
@@ -43,6 +43,12 @@ Ex: User Interface -> Domain -> Data Acess Library
 
 ```shell
 Program -> TransacaoService -> CalculadoraDeImpostos
+```
+
+```shell
+A classe CalculadoraDeImpostos possui alguns métodos com transparência referencial.
+
+Ex: CalculaPrejuizo, CalculaLucro, MediaPonderada
 ```
 
 
@@ -88,6 +94,11 @@ Na raíz da aplicação dentro da pasta \GanhoDeCapital rode o comando:
 
 ```bash
   dotnet run
+``` 
+
+Para testes:
+```bash
+  dotnet test
 ``` 
 
 Informe a entrada dos dados e espere a saída no console.
