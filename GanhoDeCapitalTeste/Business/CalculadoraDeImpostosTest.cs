@@ -1,10 +1,5 @@
-﻿using Xunit;
-using GanhoDeCapital.Business;
-using GanhoDeCapital.Model;
-using System.Collections.Generic;
-using System.Text.Json;
-using GanhoDeCapital;
-using GanhoDeCapital.Service;
+﻿using GanhoDeCapital.Business;
+using Xunit;
 
 namespace GanhoDeCapitalTeste.Business
 {
@@ -14,6 +9,7 @@ namespace GanhoDeCapitalTeste.Business
 
         [Theory]
         [InlineData(15, 50, 10, 15)]
+        [InlineData(10, 20, 15, 20)]
         public void VerificaSeVendaRetornaTaxaIgualAZero(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
         {
             calculadoraDeImpostos = new CalculadoraDeImpostos();
@@ -25,13 +21,14 @@ namespace GanhoDeCapitalTeste.Business
 
         [Theory]
         [InlineData(15000)]
-        public void VerificaSePercentualSobreLucroEIgualA3000(decimal lucro) {
+        public void VerificaSePercentual20PoercentoSobreLucro(decimal lucro) {
             
             calculadoraDeImpostos = new CalculadoraDeImpostos();
 
             var retorno = calculadoraDeImpostos.PercentualSobreLucro(lucro);
-
-            Assert.Equal(3000, retorno);
+            var imposto20Porcento = (lucro * 20) / 100;
+            
+            Assert.Equal(retorno, imposto20Porcento);
         }
     }
 }

@@ -139,7 +139,7 @@ namespace GanhoDeCapital.Business
 
             return imposto;
         }
-        private bool MenorQue20000(decimal quantidade, decimal custoUnitario)
+        public bool MenorQue20000(decimal quantidade, decimal custoUnitario)
         {
             bool retorno = false;
 
@@ -153,7 +153,7 @@ namespace GanhoDeCapital.Business
             return retorno;
         }
 
-        private decimal CalculaLucro(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
+        public decimal CalculaLucro(decimal quantidade, decimal custoUnitario, decimal media, decimal valorDeCompra)
         {
 
             //resolve o caso 5 verificar

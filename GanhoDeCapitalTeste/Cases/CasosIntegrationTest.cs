@@ -8,7 +8,7 @@ using GanhoDeCapital.Service;
 
 namespace GanhoDeCapitalTeste.Casos
 {
-    public class CasosTest
+    public class CasosIntegrationTest
     {
         ICalculadoraDeImpostos calculadoraDeImpostos;
 

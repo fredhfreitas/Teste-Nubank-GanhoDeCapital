@@ -20,7 +20,7 @@ Ex: User Interface -> Domain -> Data Acess Library
 ```shell  
   .GanhoDeCapital
   ├── Business
-  │   └── CalculadoraDeImpostos.cs (Implementa)
+  │   └── CalculadoraDeImpostos.cs (Implementa os calculos "Os métodos estão públicos apenas para facilitar a demonstração de testes unitários.")
   │   └── ICalculadoraDeImpostos.cs
   ├── Service
   │   └── ITransacaoService.cs
@@ -34,8 +34,10 @@ Ex: User Interface -> Domain -> Data Acess Library
   ├── Program.cs (Class principal onde tudo começa
   │
   .GanhoDeCapitalTeste
+  ├── Business
+  |   └── CalculadoraDeImpostosTest.cs (Contém os testes unitários)
   └── Cases
-      └── Casos.cs (Contém todos os 9 casos do code challenge)
+      └── CasosIntegrationTest.cs (Contém todos os 9 casos do code challenge)
       
 ```
 
@@ -88,7 +90,7 @@ Na raíz da aplicação dentro da pasta \GanhoDeCapital rode o comando:
   dotnet run
 ``` 
 
-Informe a linha de entrada e espere a saída.
+Informe a entrada dos dados e espere a saída no console.
 
 
 
