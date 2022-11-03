@@ -12,7 +12,7 @@ namespace GanhoDeCapital.Service
             string taxa = string.Empty;
             //Retorna a lista de ações em string
             var lista = Util.RetornaListaTransacao(entrada);
-
+            //TODO:implementar métodos assincronos no futuro
             foreach (var valor in lista)
             {
                 var acoes = JsonSerializer.Deserialize<List<Acao>>(valor);
