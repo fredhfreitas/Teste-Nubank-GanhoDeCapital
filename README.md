@@ -1,7 +1,10 @@
+##Teste aprovado Nubank
+
+
 ### 
 ###### Para visualizar melhor as informações contidas neste documento, recomendo copiar e colar todo este conteúdo no site Markdown Live Preview: [https://markdownlivepreview.com](https://markdownlivepreview.com/).
 
-# Code Challenge: Ganho de Capital
+# Code Challenge: Ganho de Capital - [https://github.com/fredhfreitas/GanhoDeCapital/blob/master/spec-ptbr_(6).pdf)
 
 Este projeto tem como objetivo apresentar um programa de linha de comando (CLI) que calcula o imposto a ser pago sobre lucros ou prejuízos de operações do mercado financeiro de ações.
 
